@@ -15,7 +15,17 @@ var _DayCell = require("../DayCell");
 
 var _utils = require("../../utils");
 
-var _dateFns = require("date-fns");
+var _max = _interopRequireDefault(require("date-fns/max"));
+
+var _isWithinInterval = _interopRequireDefault(require("date-fns/isWithinInterval"));
+
+var _min = _interopRequireDefault(require("date-fns/min"));
+
+var _addDays = _interopRequireDefault(require("date-fns/addDays"));
+
+var _differenceInCalendarDays = _interopRequireDefault(require("date-fns/differenceInCalendarDays"));
+
+var _isBefore = _interopRequireDefault(require("date-fns/isBefore"));
 
 var _classnames = _interopRequireDefault(require("classnames"));
 
@@ -87,10 +97,10 @@ function (_Component) {
         endDate = value.endDate;
       } else if (focusedRange[1] === 0) {
         // startDate selection
-        var dayOffset = (0, _dateFns.differenceInCalendarDays)(endDate, startDate);
+        var dayOffset = (0, _differenceInCalendarDays["default"])(endDate, startDate);
         startDate = value;
-        endDate = moveRangeOnFirstSelection ? (0, _dateFns.addDays)(value, dayOffset) : value;
-        if (maxDate) endDate = (0, _dateFns.min)([endDate, maxDate]);
+        endDate = moveRangeOnFirstSelection ? (0, _addDays["default"])(value, dayOffset) : value;
+        if (maxDate) endDate = (0, _min["default"])([endDate, maxDate]);
         nextFocusRange = [focusedRange[0], 1];
       } else {
         endDate = value;
@@ -99,7 +109,7 @@ function (_Component) {
 
       var isStartDateSelected = focusedRange[1] === 0;
 
-      if ((0, _dateFns.isBefore)(endDate, startDate)) {
+      if ((0, _isBefore["default"])(endDate, startDate)) {
         isStartDateSelected = !isStartDateSelected;
         var _ref = [endDate, startDate];
         startDate = _ref[0];
@@ -107,7 +117,7 @@ function (_Component) {
       }
 
       var inValidDatesWithinRange = disabledDates.filter(function (disabledDate) {
-        return (0, _dateFns.isWithinInterval)(disabledDate, {
+        return (0, _isWithinInterval["default"])(disabledDate, {
           start: startDate,
           end: endDate
         });
@@ -115,9 +125,9 @@ function (_Component) {
 
       if (inValidDatesWithinRange.length > 0) {
         if (isStartDateSelected) {
-          startDate = (0, _dateFns.addDays)((0, _dateFns.max)(inValidDatesWithinRange), 1);
+          startDate = (0, _addDays["default"])((0, _max["default"])(inValidDatesWithinRange), 1);
         } else {
-          endDate = (0, _dateFns.addDays)((0, _dateFns.min)(inValidDatesWithinRange), -1);
+          endDate = (0, _addDays["default"])((0, _min["default"])(inValidDatesWithinRange), -1);
         }
       }
 
