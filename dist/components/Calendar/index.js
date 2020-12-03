@@ -23,7 +23,39 @@ var _reactList = _interopRequireDefault(require("react-list"));
 
 var _shallowEqual = require("shallow-equal");
 
-var _dateFns = require("date-fns");
+var _max = _interopRequireDefault(require("date-fns/max"));
+
+var _min = _interopRequireDefault(require("date-fns/min"));
+
+var _differenceInDays = _interopRequireDefault(require("date-fns/differenceInDays"));
+
+var _isSameMonth = _interopRequireDefault(require("date-fns/isSameMonth"));
+
+var _addDays = _interopRequireDefault(require("date-fns/addDays"));
+
+var _endOfMonth = _interopRequireDefault(require("date-fns/endOfMonth"));
+
+var _startOfMonth = _interopRequireDefault(require("date-fns/startOfMonth"));
+
+var _differenceInCalendarMonths = _interopRequireDefault(require("date-fns/differenceInCalendarMonths"));
+
+var _setMonth2 = _interopRequireDefault(require("date-fns/setMonth"));
+
+var _setYear2 = _interopRequireDefault(require("date-fns/setYear"));
+
+var _addYears = _interopRequireDefault(require("date-fns/addYears"));
+
+var _isSameDay = _interopRequireDefault(require("date-fns/isSameDay"));
+
+var _endOfWeek = _interopRequireDefault(require("date-fns/endOfWeek"));
+
+var _startOfWeek = _interopRequireDefault(require("date-fns/startOfWeek"));
+
+var _eachDayOfInterval = _interopRequireDefault(require("date-fns/eachDayOfInterval"));
+
+var _format = _interopRequireDefault(require("date-fns/format"));
+
+var _addMonths = _interopRequireDefault(require("date-fns/addMonths"));
 
 var _enUS = _interopRequireDefault(require("date-fns/locale/en-US"));
 
@@ -93,7 +125,7 @@ function (_PureComponent) {
         return;
       }
 
-      var targetMonthIndex = (0, _dateFns.differenceInCalendarMonths)(date, props.minDate, _this.dateOptions);
+      var targetMonthIndex = (0, _differenceInCalendarMonths["default"])(date, props.minDate, _this.dateOptions);
 
       var visibleMonths = _this.list.getVisibleRange();
 
@@ -146,19 +178,39 @@ function (_PureComponent) {
           maxDate = _this$props.maxDate;
       var modeMapper = {
         monthOffset: function monthOffset() {
-          return (0, _dateFns.addMonths)(focusedDate, value);
+          return (0, _addMonths["default"])(focusedDate, value);
         },
-        setMonth: function setMonth() {
-          return (0, _dateFns.setMonth)(focusedDate, value);
-        },
-        setYear: function setYear() {
-          return (0, _dateFns.setYear)(focusedDate, value);
-        },
+        setMonth: function (_setMonth) {
+          function setMonth() {
+            return _setMonth.apply(this, arguments);
+          }
+
+          setMonth.toString = function () {
+            return _setMonth.toString();
+          };
+
+          return setMonth;
+        }(function () {
+          return (0, _setMonth2["default"])(focusedDate, value);
+        }),
+        setYear: function (_setYear) {
+          function setYear() {
+            return _setYear.apply(this, arguments);
+          }
+
+          setYear.toString = function () {
+            return _setYear.toString();
+          };
+
+          return setYear;
+        }(function () {
+          return (0, _setYear2["default"])(focusedDate, value);
+        }),
         set: function set() {
           return value;
         }
       };
-      var newDate = (0, _dateFns.min)([(0, _dateFns.max)([modeMapper[mode](), minDate]), maxDate]);
+      var newDate = (0, _min["default"])([(0, _max["default"])([modeMapper[mode](), minDate]), maxDate]);
 
       _this.focusToDate(newDate, _this.props, false);
 
@@ -182,8 +234,8 @@ function (_PureComponent) {
 
 
       if (visibleMonths[0] === undefined) return;
-      var visibleMonth = (0, _dateFns.addMonths)(minDate, visibleMonths[0] || 0);
-      var isFocusedToDifferent = !(0, _dateFns.isSameMonth)(visibleMonth, focusedDate);
+      var visibleMonth = (0, _addMonths["default"])(minDate, visibleMonths[0] || 0);
+      var isFocusedToDifferent = !(0, _isSameMonth["default"])(visibleMonth, focusedDate);
 
       if (isFocusedToDifferent && !isFirstRender) {
         _this.setState({
@@ -344,7 +396,7 @@ function (_PureComponent) {
         endDate: date
       };
 
-      if (displayMode !== 'dateRange' || (0, _dateFns.isSameDay)(newRange.startDate, date)) {
+      if (displayMode !== 'dateRange' || (0, _isSameDay["default"])(newRange.startDate, date)) {
         _this.setState({
           drag: {
             status: false,
@@ -393,13 +445,13 @@ function (_PureComponent) {
       }
 
       if (direction === 'horizontal') return scrollArea.monthWidth;
-      var monthStep = (0, _dateFns.addMonths)(minDate, index);
+      var monthStep = (0, _addMonths["default"])(minDate, index);
 
       var _getMonthDisplayRange = (0, _utils.getMonthDisplayRange)(monthStep, _this.dateOptions),
           start = _getMonthDisplayRange.start,
           end = _getMonthDisplayRange.end;
 
-      var isLongMonth = (0, _dateFns.differenceInDays)(end, start, _this.dateOptions) + 1 > 7 * 5;
+      var isLongMonth = (0, _differenceInDays["default"])(end, start, _this.dateOptions) + 1 > 7 * 5;
       return isLongMonth ? scrollArea.longMonthHeight : scrollArea.monthHeight;
     });
 
@@ -513,14 +565,14 @@ function (_PureComponent) {
       var now = new Date();
       return _react["default"].createElement("div", {
         className: this.styles.weekDays
-      }, (0, _dateFns.eachDayOfInterval)({
-        start: (0, _dateFns.startOfWeek)(now, this.dateOptions),
-        end: (0, _dateFns.endOfWeek)(now, this.dateOptions)
+      }, (0, _eachDayOfInterval["default"])({
+        start: (0, _startOfWeek["default"])(now, this.dateOptions),
+        end: (0, _endOfWeek["default"])(now, this.dateOptions)
       }).map(function (day, i) {
         return _react["default"].createElement("span", {
           className: _this4.styles.weekDay,
           key: i
-        }, (0, _dateFns.format)(day, _this4.props.weekdayDisplayFormat, _this4.dateOptions));
+        }, (0, _format["default"])(day, _this4.props.weekdayDisplayFormat, _this4.dateOptions));
       }));
     }
   }, {
@@ -581,7 +633,7 @@ function (_PureComponent) {
         },
         onScroll: this.handleScroll
       }, _react["default"].createElement(_reactList["default"], {
-        length: (0, _dateFns.differenceInCalendarMonths)((0, _dateFns.endOfMonth)(maxDate), (0, _dateFns.addDays)((0, _dateFns.startOfMonth)(minDate), -1), this.dateOptions),
+        length: (0, _differenceInCalendarMonths["default"])((0, _endOfMonth["default"])(maxDate), (0, _addDays["default"])((0, _startOfMonth["default"])(minDate), -1), this.dateOptions),
         treshold: 500,
         type: "variable",
         ref: function ref(target) {
@@ -590,7 +642,7 @@ function (_PureComponent) {
         itemSizeEstimator: this.estimateMonthSize,
         axis: isVertical ? 'y' : 'x',
         itemRenderer: function itemRenderer(index, key) {
-          var monthStep = (0, _dateFns.addMonths)(minDate, index);
+          var monthStep = (0, _addMonths["default"])(minDate, index);
           return _react["default"].createElement(_Month["default"], _extends({}, _this5.props, {
             onPreviewChange: onPreviewChange || _this5.updatePreview,
             preview: preview || _this5.state.preview,
@@ -621,7 +673,7 @@ function (_PureComponent) {
       }))) : _react["default"].createElement("div", {
         className: (0, _classnames3["default"])(this.styles.months, isVertical ? this.styles.monthsVertical : this.styles.monthsHorizontal)
       }, new Array(this.props.months).fill(null).map(function (_, i) {
-        var monthStep = (0, _dateFns.addMonths)(_this5.state.focusedDate, i);
+        var monthStep = (0, _addMonths["default"])(_this5.state.focusedDate, i);
         return _react["default"].createElement(_Month["default"], _extends({}, _this5.props, {
           onPreviewChange: onPreviewChange || _this5.updatePreview,
           preview: preview || _this5.state.preview,
@@ -671,8 +723,8 @@ Calendar.defaultProps = {
     enabled: false
   },
   direction: 'vertical',
-  maxDate: (0, _dateFns.addYears)(new Date(), 20),
-  minDate: (0, _dateFns.addYears)(new Date(), -100),
+  maxDate: (0, _addYears["default"])(new Date(), 20),
+  minDate: (0, _addYears["default"])(new Date(), -100),
   rangeColors: ['#3d91ff', '#3ecf8e', '#fed14c'],
   startDatePlaceholder: 'Early',
   endDatePlaceholder: 'Continuous',

@@ -11,7 +11,17 @@ var _propTypes = _interopRequireDefault(require("prop-types"));
 
 var _classnames4 = _interopRequireDefault(require("classnames"));
 
-var _dateFns = require("date-fns");
+var _endOfDay = _interopRequireDefault(require("date-fns/endOfDay"));
+
+var _isBefore = _interopRequireDefault(require("date-fns/isBefore"));
+
+var _isAfter = _interopRequireDefault(require("date-fns/isAfter"));
+
+var _isSameDay = _interopRequireDefault(require("date-fns/isSameDay"));
+
+var _format = _interopRequireDefault(require("date-fns/format"));
+
+var _startOfDay = _interopRequireDefault(require("date-fns/startOfDay"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -152,11 +162,11 @@ function (_Component) {
           day = _this$props4.day,
           styles = _this$props4.styles;
       if (!preview) return null;
-      var startDate = preview.startDate ? (0, _dateFns.endOfDay)(preview.startDate) : null;
-      var endDate = preview.endDate ? (0, _dateFns.startOfDay)(preview.endDate) : null;
-      var isInRange = (!startDate || (0, _dateFns.isAfter)(day, startDate)) && (!endDate || (0, _dateFns.isBefore)(day, endDate));
-      var isStartEdge = !isInRange && (0, _dateFns.isSameDay)(day, startDate);
-      var isEndEdge = !isInRange && (0, _dateFns.isSameDay)(day, endDate);
+      var startDate = preview.startDate ? (0, _endOfDay["default"])(preview.startDate) : null;
+      var endDate = preview.endDate ? (0, _startOfDay["default"])(preview.endDate) : null;
+      var isInRange = (!startDate || (0, _isAfter["default"])(day, startDate)) && (!endDate || (0, _isBefore["default"])(day, endDate));
+      var isStartEdge = !isInRange && (0, _isSameDay["default"])(day, startDate);
+      var isEndEdge = !isInRange && (0, _isSameDay["default"])(day, endDate);
       return _react["default"].createElement("span", {
         className: (0, _classnames4["default"])((_classnames2 = {}, _defineProperty(_classnames2, styles.dayStartPreview, isStartEdge), _defineProperty(_classnames2, styles.dayInPreview, isInRange), _defineProperty(_classnames2, styles.dayEndPreview, isEndEdge), _classnames2)),
         style: {
@@ -172,7 +182,7 @@ function (_Component) {
           day = _this$props5.day;
 
       if (_this.props.displayMode === 'date') {
-        var isSelected = (0, _dateFns.isSameDay)(_this.props.day, _this.props.date);
+        var isSelected = (0, _isSameDay["default"])(_this.props.day, _this.props.date);
         return isSelected ? _react["default"].createElement("span", {
           className: styles.selected,
           style: {
@@ -185,17 +195,17 @@ function (_Component) {
         var startDate = range.startDate;
         var endDate = range.endDate;
 
-        if (startDate && endDate && (0, _dateFns.isBefore)(endDate, startDate)) {
+        if (startDate && endDate && (0, _isBefore["default"])(endDate, startDate)) {
           var _ref = [endDate, startDate];
           startDate = _ref[0];
           endDate = _ref[1];
         }
 
-        startDate = startDate ? (0, _dateFns.endOfDay)(startDate) : null;
-        endDate = endDate ? (0, _dateFns.startOfDay)(endDate) : null;
-        var isInRange = (!startDate || (0, _dateFns.isAfter)(day, startDate)) && (!endDate || (0, _dateFns.isBefore)(day, endDate));
-        var isStartEdge = !isInRange && (0, _dateFns.isSameDay)(day, startDate);
-        var isEndEdge = !isInRange && (0, _dateFns.isSameDay)(day, endDate);
+        startDate = startDate ? (0, _endOfDay["default"])(startDate) : null;
+        endDate = endDate ? (0, _startOfDay["default"])(endDate) : null;
+        var isInRange = (!startDate || (0, _isAfter["default"])(day, startDate)) && (!endDate || (0, _isBefore["default"])(day, endDate));
+        var isStartEdge = !isInRange && (0, _isSameDay["default"])(day, startDate);
+        var isEndEdge = !isInRange && (0, _isSameDay["default"])(day, endDate);
 
         if (isInRange || isStartEdge || isEndEdge) {
           return [].concat(_toConsumableArray(result), [_objectSpread({
@@ -250,7 +260,7 @@ function (_Component) {
         }
       }), this.renderSelectionPlaceholders(), this.renderPreviewPlaceholder(), _react["default"].createElement("span", {
         className: this.props.styles.dayNumber
-      }, _react["default"].createElement("span", null, (0, _dateFns.format)(this.props.day, this.props.dayDisplayFormat))));
+      }, _react["default"].createElement("span", null, (0, _format["default"])(this.props.day, this.props.dayDisplayFormat))));
     }
   }]);
 

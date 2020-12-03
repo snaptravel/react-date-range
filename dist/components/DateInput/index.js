@@ -11,7 +11,13 @@ var _propTypes = _interopRequireDefault(require("prop-types"));
 
 var _classnames = _interopRequireDefault(require("classnames"));
 
-var _dateFns = require("date-fns");
+var _isEqual = _interopRequireDefault(require("date-fns/isEqual"));
+
+var _isValid = _interopRequireDefault(require("date-fns/isValid"));
+
+var _parse = _interopRequireDefault(require("date-fns/parse"));
+
+var _format = _interopRequireDefault(require("date-fns/format"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -86,7 +92,7 @@ function (_PureComponent) {
     value: function componentDidUpdate(prevProps) {
       var value = prevProps.value;
 
-      if (!(0, _dateFns.isEqual)(value, this.props.value)) {
+      if (!(0, _isEqual["default"])(value, this.props.value)) {
         this.setState({
           value: this.formatDate(this.props)
         });
@@ -99,8 +105,8 @@ function (_PureComponent) {
           dateDisplayFormat = _ref.dateDisplayFormat,
           dateOptions = _ref.dateOptions;
 
-      if (value && (0, _dateFns.isValid)(value)) {
-        return (0, _dateFns.format)(value, dateDisplayFormat, dateOptions);
+      if (value && (0, _isValid["default"])(value)) {
+        return (0, _format["default"])(value, dateDisplayFormat, dateOptions);
       }
 
       return '';
@@ -120,9 +126,9 @@ function (_PureComponent) {
           onChange = _this$props.onChange,
           dateDisplayFormat = _this$props.dateDisplayFormat,
           dateOptions = _this$props.dateOptions;
-      var parsed = (0, _dateFns.parse)(value, dateDisplayFormat, new Date(), dateOptions);
+      var parsed = (0, _parse["default"])(value, dateDisplayFormat, new Date(), dateOptions);
 
-      if ((0, _dateFns.isValid)(parsed)) {
+      if ((0, _isValid["default"])(parsed)) {
         this.setState({
           changed: false
         }, function () {
