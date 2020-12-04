@@ -111,7 +111,19 @@ class Calendar extends PureComponent {
   componentDidMount() {
     if (this.props.scroll.enabled) {
       // prevent react-list's initial render focus problem
-      setTimeout(() => this.focusToDate(this.state.focusedDate));
+      setTimeout(() => {
+        if (this.list) {
+          this.focusToDate(this.state.focusedDate);
+        } else {
+          console.error('this.list is not initially defined in Calendar.componentDidMount');
+          setTimeout(() => {
+            if (!this.list) {
+              console.error('this.list is still not defined');
+              this.focusToDate(this.state.focusedDate);
+            }
+          }, 50);
+        }
+      });
     }
   }
 
