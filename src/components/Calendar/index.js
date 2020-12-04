@@ -122,7 +122,12 @@ class Calendar extends PureComponent {
     };
     const targetProp = propMapper[this.props.displayMode];
     if (this.props[targetProp] !== prevProps[targetProp]) {
-      this.updateShownDate(this.props);
+      if (
+        this.props[targetProp] === propMapper['dateRange'] &&
+        this.selectedDatesHaveChanged(prevProps.ranges, this.props.ranges)
+      ) {
+        this.updateShownDate(this.props);
+      }
     }
 
     if (
@@ -141,6 +146,20 @@ class Calendar extends PureComponent {
       this.setState({ scrollArea: this.calcScrollArea(this.props) });
     }
   }
+
+  selectedDatesHaveChanged = (oldRange, newRange) => {
+    if (
+      oldRange &&
+      newRange &&
+      oldRange.length === newRange.length &&
+      oldRange.key === newRange.key &&
+      isSameDay(oldRange.startDate, newRange.startDate) &&
+      isSameDay(oldRange.endDate, newRange.endDate)
+    ) {
+      return false;
+    }
+    return true;
+  };
 
   changeShownDate = (value, mode = 'set') => {
     const { focusedDate } = this.state;
