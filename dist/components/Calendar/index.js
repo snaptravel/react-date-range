@@ -169,6 +169,14 @@ function (_PureComponent) {
       });
     });
 
+    _defineProperty(_assertThisInitialized(_this), "selectedDatesHaveChanged", function (oldRange, newRange) {
+      if (oldRange && newRange && oldRange.length === newRange.length && oldRange.key === newRange.key && (0, _isSameDay["default"])(oldRange.startDate, newRange.startDate) && (0, _isSameDay["default"])(oldRange.endDate, newRange.endDate)) {
+        return false;
+      }
+
+      return true;
+    });
+
     _defineProperty(_assertThisInitialized(_this), "changeShownDate", function (value) {
       var mode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'set';
       var focusedDate = _this.state.focusedDate;
@@ -538,7 +546,9 @@ function (_PureComponent) {
       var targetProp = propMapper[this.props.displayMode];
 
       if (this.props[targetProp] !== prevProps[targetProp]) {
-        this.updateShownDate(this.props);
+        if (this.props[targetProp] === propMapper['dateRange'] && this.selectedDatesHaveChanged(prevProps.ranges, this.props.ranges)) {
+          this.updateShownDate(this.props);
+        }
       }
 
       if (prevProps.locale !== this.props.locale || prevProps.weekStartsOn !== this.props.weekStartsOn) {
