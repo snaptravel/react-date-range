@@ -532,7 +532,18 @@ function (_PureComponent) {
       if (this.props.scroll.enabled) {
         // prevent react-list's initial render focus problem
         setTimeout(function () {
-          return _this3.focusToDate(_this3.state.focusedDate);
+          if (_this3.list) {
+            _this3.focusToDate(_this3.state.focusedDate);
+          } else {
+            console.error('this.list is not initially defined in Calendar.componentDidMount');
+            setTimeout(function () {
+              if (!_this3.list) {
+                console.error('this.list is still not defined');
+
+                _this3.focusToDate(_this3.state.focusedDate);
+              }
+            }, 50);
+          }
         });
       }
     }
