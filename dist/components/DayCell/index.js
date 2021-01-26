@@ -91,6 +91,7 @@ function (_Component) {
     });
 
     _defineProperty(_assertThisInitialized(_this), "handleMouseEvent", function (event) {
+      if (_this.state.useTouch && event.type !== 'mouseleave') return;
       var _this$props2 = _this.props,
           day = _this$props2.day,
           disabled = _this$props2.disabled,
@@ -99,6 +100,10 @@ function (_Component) {
           onMouseDown = _this$props2.onMouseDown,
           onMouseUp = _this$props2.onMouseUp;
       var stateChanges = {};
+
+      if (_this.state.useTouch) {
+        stateChanges.useTouch = false;
+      }
 
       if (disabled) {
         onPreviewChange();
@@ -138,29 +143,67 @@ function (_Component) {
       }
     });
 
+    _defineProperty(_assertThisInitialized(_this), "handleTouchEvent", function (event) {
+      var _this$props3 = _this.props,
+          day = _this$props3.day,
+          disabled = _this$props3.disabled,
+          onPreviewChange = _this$props3.onPreviewChange;
+      var stateChanges = {};
+
+      if (!_this.state.useTouch) {
+        stateChanges.useTouch = true;
+      }
+
+      if (disabled) {
+        onPreviewChange();
+        return;
+      }
+
+      switch (event.type) {
+        case 'touchstart':
+          stateChanges.active = true;
+          break;
+
+        case 'touchmove':
+          stateChanges.active = false;
+          break;
+
+        case 'touchend':
+          if (_this.state.active) {
+            _this.props.onMouseUp(day);
+          }
+
+          break;
+      }
+
+      if (Object.keys(stateChanges).length) {
+        _this.setState(stateChanges);
+      }
+    });
+
     _defineProperty(_assertThisInitialized(_this), "getClassNames", function () {
       var _classnames;
 
-      var _this$props3 = _this.props,
-          isPassive = _this$props3.isPassive,
-          isToday = _this$props3.isToday,
-          isWeekend = _this$props3.isWeekend,
-          isStartOfWeek = _this$props3.isStartOfWeek,
-          isEndOfWeek = _this$props3.isEndOfWeek,
-          isStartOfMonth = _this$props3.isStartOfMonth,
-          isEndOfMonth = _this$props3.isEndOfMonth,
-          disabled = _this$props3.disabled,
-          styles = _this$props3.styles;
+      var _this$props4 = _this.props,
+          isPassive = _this$props4.isPassive,
+          isToday = _this$props4.isToday,
+          isWeekend = _this$props4.isWeekend,
+          isStartOfWeek = _this$props4.isStartOfWeek,
+          isEndOfWeek = _this$props4.isEndOfWeek,
+          isStartOfMonth = _this$props4.isStartOfMonth,
+          isEndOfMonth = _this$props4.isEndOfMonth,
+          disabled = _this$props4.disabled,
+          styles = _this$props4.styles;
       return (0, _classnames4["default"])(styles.day, (_classnames = {}, _defineProperty(_classnames, styles.dayPassive, isPassive), _defineProperty(_classnames, styles.dayDisabled, disabled), _defineProperty(_classnames, styles.dayToday, isToday), _defineProperty(_classnames, styles.dayWeekend, isWeekend), _defineProperty(_classnames, styles.dayStartOfWeek, isStartOfWeek), _defineProperty(_classnames, styles.dayEndOfWeek, isEndOfWeek), _defineProperty(_classnames, styles.dayStartOfMonth, isStartOfMonth), _defineProperty(_classnames, styles.dayEndOfMonth, isEndOfMonth), _defineProperty(_classnames, styles.dayHovered, _this.state.hover), _defineProperty(_classnames, styles.dayActive, _this.state.active), _classnames));
     });
 
     _defineProperty(_assertThisInitialized(_this), "renderPreviewPlaceholder", function () {
       var _classnames2;
 
-      var _this$props4 = _this.props,
-          preview = _this$props4.preview,
-          day = _this$props4.day,
-          styles = _this$props4.styles;
+      var _this$props5 = _this.props,
+          preview = _this$props5.preview,
+          day = _this$props5.day,
+          styles = _this$props5.styles;
       if (!preview) return null;
       var startDate = preview.startDate ? (0, _endOfDay["default"])(preview.startDate) : null;
       var endDate = preview.endDate ? (0, _startOfDay["default"])(preview.endDate) : null;
@@ -176,10 +219,10 @@ function (_Component) {
     });
 
     _defineProperty(_assertThisInitialized(_this), "renderSelectionPlaceholders", function () {
-      var _this$props5 = _this.props,
-          styles = _this$props5.styles,
-          ranges = _this$props5.ranges,
-          day = _this$props5.day;
+      var _this$props6 = _this.props,
+          styles = _this$props6.styles,
+          ranges = _this$props6.ranges,
+          day = _this$props6.day;
 
       if (_this.props.displayMode === 'date') {
         var isSelected = (0, _isSameDay["default"])(_this.props.day, _this.props.date);
@@ -251,6 +294,9 @@ function (_Component) {
         onPauseCapture: this.handleMouseEvent,
         onKeyDown: this.handleKeyEvent,
         onKeyUp: this.handleKeyEvent,
+        onTouchEnd: this.handleTouchEvent,
+        onTouchStart: this.handleTouchEvent,
+        onTouchMove: this.handleTouchEvent,
         className: this.getClassNames(this.props.styles)
       }, this.props.disabled || this.props.isPassive ? {
         tabIndex: -1
